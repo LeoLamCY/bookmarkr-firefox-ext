@@ -1,0 +1,26 @@
+{
+  "manifest_version": 2,
+  "name": "Bookmarkr",
+  "version": "0.1",
+  "description": "Extention for Bookmarkr.",
+  "icons": {
+    "48": "icons/icon-48.png"
+  },
+
+  "applications": {
+    "gecko": {
+      "id": "ext@bookmarkr.com",
+      "strict_min_version": "45.0"
+    }
+  },
+
+  "permissions": [
+    "activeTab"
+  ],
+
+  "browser_action": {
+    "default_icon": "icons/icon-32.png",
+    "default_title": "Bookmarkr",
+    "default_popup": "popup/bookmarkr-popup.html"
+  }
+}
