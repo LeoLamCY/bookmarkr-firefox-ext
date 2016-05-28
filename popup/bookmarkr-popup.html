@@ -6,12 +6,14 @@
   </head>
   <body>
     <div class="wrapper">
-      <h2>Save to Bookmarkr</h2>
+      <h2 class="inp">Save to Bookmarkr</h2>
       <form onsubmit="submit()">
-        <input type="text" name="title" placeholder="title">
-        <input type="text" name="url" placeholder="url">
-        <input type="text" name="tags" placeholder="tags">
-        <button>Submit</button>
+
+          <input id="title" type="text" name="title" placeholder="title">
+          <input id="url" type="text" name="url" placeholder="url">
+          <input id="tags" type="text" name="tags" placeholder="tags">
+          <button type="submit">Submit</button>
+
       </form>
       <script src="bookmarkr-popup.js"></script>
     </div>

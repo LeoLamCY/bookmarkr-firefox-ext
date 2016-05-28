@@ -1,17 +1,22 @@
-/*
-Given the name of a beast, get the URL to the corresponding image.
-*/
-function beastNameToURL(beastName) {
-  switch (beastName) {
-    case "Frog":
-      return chrome.extension.getURL("beasts/frog.jpg");
-    case "Snake":
-      return chrome.extension.getURL("beasts/snake.jpg");
-    case "Turtle":
-      return chrome.extension.getURL("beasts/turtle.jpg");
-  }
-}
+chrome.tabs.executeScript(null, {
+  file: "/content_scripts/script.js"
+});
 
+document.querySelector("form").addEventListener("submit", click);
+
+// chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+//   chrome.tabs.sendMessage(tabs[0].id, {tab: tabs[0]});
+// });
+
+function click(e) {
+  chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+    chrome.tabs.sendMessage(tabs[0].id, {tab: tabs[0]});
+  });
+  var title = document.getElementById("title");
+    var url = document.getElementById("url");
+    title.value = request.tab.title;
+    url.value = request.tab.url;
+}
 /*
 Listen for clicks in the popup.
 
@@ -25,9 +30,10 @@ Then get the active tab and send "beastify.js" a message
 containing the URL to the chosen beast's image.
 */
 document.addEventListener("click", function(e) {
-  if (!e.target.classList.contains("beast")) {
-    return;
-  }
+  if (e.target.classList.contains("inp")) {
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+      chrome.tabs.sendMessage(tabs[0].id, {beastURL: "http://www.google.com"});
+  })}
 
   var chosenBeast = e.target.textContent;
   var chosenBeastURL = beastNameToURL(chosenBeast);
