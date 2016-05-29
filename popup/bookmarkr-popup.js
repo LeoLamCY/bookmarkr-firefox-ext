@@ -1,22 +1,44 @@
-chrome.tabs.executeScript(null, {
-  file: "/content_scripts/script.js"
-});
+// chrome.tabs.executeScript(null, {
+//   file: "/content_scripts/script.js"
+// });
 
-document.querySelector("form").addEventListener("submit", click);
+// document.querySelector("form").addEventListener("submit", click);
+// 
+
+function hello() {
+  chrome.tabs.executeScript({
+    file: 'alert.js'
+  }); 
+}
+
+document.getElementById("but").addEventListener('click', hello);
+
+// $("#but").click(function() {
+//   e.preventDefault();
+//   chrome.tabs.query({'active': true,'currentWindow':true},function(tab){
+//     chrome.tabs.sendMessage(tab[0].id,"stuff", function(response){
+//       //assuming that info was html markup then you could do
+//       document.body.innerhtml = "test";
+//       //I personally wouldn't do it like this but you get the idea
+//     });
+//   });
+// });
 
 // chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
 //   chrome.tabs.sendMessage(tabs[0].id, {tab: tabs[0]});
 // });
 
-function click(e) {
-  chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-    chrome.tabs.sendMessage(tabs[0].id, {tab: tabs[0]});
-  });
-  var title = document.getElementById("title");
-    var url = document.getElementById("url");
-    title.value = request.tab.title;
-    url.value = request.tab.url;
-}
+// function click(e) {
+//   e.preventDefault();
+//   chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+//     chrome.tabs.sendMessage(tabs[0].id, {tab: tabs[0]});
+//   });
+//   // var title = document.getElementById("title");
+//   //   var url = document.getElementById("url");
+//   //   title.value = request.tab.title;
+//   //   url.value = request.tab.url;
+//   $('#title').val("test");
+// }
 /*
 Listen for clicks in the popup.
 
