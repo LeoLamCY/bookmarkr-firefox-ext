@@ -4,19 +4,25 @@
 // });
 
 // document.querySelector("form").addEventListener("submit", click);
-// 
+//
 
 // function hello() {
 //   chrome.tabs.executeScript({
 //     file: 'alert.js'
-//   }); 
+//   });
 // }
-
 
 var backgroundPage = chrome.extension.getBackgroundPage();
 
-document.querySelector('button').addEventListener('click', function() {
-  backgroundPage.onSubmitClick();
+
+chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+  document.querySelector("input[name='title']").value = tabs[0].title;
+  document.querySelector("input[name='url']").value = tabs[0].url;
+});
+
+document.querySelector('button').addEventListener('click', function(e) {
+  // backgroundPage.onSubmitClick();
+  e.preventDefault();
 });
 
 // $("#but").click(function() {

@@ -1,5 +1,3 @@
-"use strict";
-
-function onSubmitClick() {
-    alert("asda");
+var onSubmitClick = function() {
+    document.querySelector("#title").value = "test";
 }
