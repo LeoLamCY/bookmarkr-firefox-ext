@@ -1,3 +1,4 @@
+
 // chrome.tabs.executeScript(null, {
 //   file: "/content_scripts/script.js"
 // });
@@ -5,13 +6,18 @@
 // document.querySelector("form").addEventListener("submit", click);
 // 
 
-function hello() {
-  chrome.tabs.executeScript({
-    file: 'alert.js'
-  }); 
-}
+// function hello() {
+//   chrome.tabs.executeScript({
+//     file: 'alert.js'
+//   }); 
+// }
 
-document.getElementById("but").addEventListener('click', hello);
+
+var backgroundPage = chrome.extension.getBackgroundPage();
+
+document.querySelector('button').addEventListener('click', function() {
+  backgroundPage.onSubmitClick();
+});
 
 // $("#but").click(function() {
 //   e.preventDefault();
@@ -51,21 +57,21 @@ Inject the "beastify.js" content script in the active tab.
 Then get the active tab and send "beastify.js" a message
 containing the URL to the chosen beast's image.
 */
-document.addEventListener("click", function(e) {
-  if (e.target.classList.contains("inp")) {
-    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-      chrome.tabs.sendMessage(tabs[0].id, {beastURL: "http://www.google.com"});
-  })}
+  // document.addEventListener("click", function(e) {
+  //   if (e.target.classList.contains("inp")) {
+  //     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+  //       chrome.tabs.sendMessage(tabs[0].id, {beastURL: "http://www.google.com"});
+  //   })}
 
-  var chosenBeast = e.target.textContent;
-  var chosenBeastURL = beastNameToURL(chosenBeast);
+  //   var chosenBeast = e.target.textContent;
+  //   var chosenBeastURL = beastNameToURL(chosenBeast);
 
-  chrome.tabs.executeScript(null, {
-    file: "/content_scripts/beastify.js"
-  });
+  //   chrome.tabs.executeScript(null, {
+  //     file: "/content_scripts/beastify.js"
+  //   });
 
-  chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-    chrome.tabs.sendMessage(tabs[0].id, {beastURL: chosenBeastURL});
-  });
+  //   chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+  //     chrome.tabs.sendMessage(tabs[0].id, {beastURL: chosenBeastURL});
+  //   });
 
-});
+  // });

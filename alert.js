@@ -1,1 +1,4 @@
-alert("asdsad");
+(function() {
+
+    alert("asdsad");
+}());

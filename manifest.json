@@ -21,7 +21,12 @@
   "browser_action": {
     "default_icon": "icons/icon-32.png",
     "default_title": "Bookmarkr",
-    "default_popup": "popup/bookmarkr-popup.html"
+    "default_popup": "popup/popup.html"
+  },
+
+  "background": {
+    "scripts":["background.js"],
+    "persistent": false
   },
 
   "content_scripts":
@@ -30,7 +35,7 @@
       "matches": [
         "<all_urls>"
       ],
-      "js":["thirdParty/jquery-2.2.4.min.js", "content_scripts/script.js"],
+      "js":["content_scripts/script.js"],
       "run_at": "document_end"
     }
   ]
