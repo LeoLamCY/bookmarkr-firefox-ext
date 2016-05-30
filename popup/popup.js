@@ -13,16 +13,30 @@
 // }
 
 var backgroundPage = chrome.extension.getBackgroundPage();
-
+var title = "";
+var url = "";
+var tags = [];
+var XHR = new XMLHttpRequest();
 
 chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-  document.querySelector("input[name='title']").value = tabs[0].title;
-  document.querySelector("input[name='url']").value = tabs[0].url;
+  title = document.querySelector("input[name='title']").value = tabs[0].title;
+  url = document.querySelector("input[name='url']").value = tabs[0].url;
+  tags = document.querySelector("input[name='tags']").value = tabs[0].tags;
 });
+
+var obj = {
+  "title": title,
+  "url": url,
+  "tags": tags
+}
 
 document.querySelector('button').addEventListener('click', function(e) {
   // backgroundPage.onSubmitClick();
   e.preventDefault();
+  XHR.open('POST', 'http://localhost:3000/api/bookmarks/');
+  XHR.setRequestHeader('Content-Type', 'application/json');
+  XHR.send(JSON.stringify(obj));
+
 });
 
 // $("#but").click(function() {
