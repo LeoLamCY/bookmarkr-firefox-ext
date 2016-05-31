@@ -1,3 +1,9 @@
+var obj = {};
+
 var onSubmitClick = function() {
-    document.querySelector("#title").value = "test";
+    console.log(obj);
+}
+
+function store(objec) {
+    obj = objec;
 }

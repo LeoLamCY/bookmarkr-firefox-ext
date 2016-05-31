@@ -15,7 +15,7 @@
   },
 
   "permissions": [
-    "tabs", "activeTab", "http://*/*", "https://*/*"
+    "tabs", "activeTab", "http://*/*", "https://*/*","<all_urls>"
   ],
 
   "browser_action": {

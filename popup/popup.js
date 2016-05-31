@@ -15,29 +15,48 @@
 var backgroundPage = chrome.extension.getBackgroundPage();
 var title = "";
 var url = "";
-var tags = [];
+var tags = "";
 var XHR = new XMLHttpRequest();
 
 chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-  title = document.querySelector("input[name='title']").value = tabs[0].title;
-  url = document.querySelector("input[name='url']").value = tabs[0].url;
-  tags = document.querySelector("input[name='tags']").value = tabs[0].tags;
-});
-
-var obj = {
-  "title": title,
-  "url": url,
-  "tags": tags
-}
+    document.querySelector("input[name='title']").value = tabs[0].title;
+    title = tabs[0].title;
+    document.querySelector("input[name='url']").value = tabs[0].url;
+    url = tabs[0].url;
+  });
 
 document.querySelector('button').addEventListener('click', function(e) {
-  // backgroundPage.onSubmitClick();
   e.preventDefault();
+  title = document.querySelector("input[name='title']").value;
+  url = document.querySelector("input[name='url']").value;
+  tags = document.querySelector("input[name='tags']").value;
+  var obj = {
+    "title": title,
+    "url": url,
+    "tags": tags
+  }
+
   XHR.open('POST', 'http://localhost:3000/api/bookmarks/');
   XHR.setRequestHeader('Content-Type', 'application/json');
+  XHR.onreadystatechange = function () {
+        if(XHR.readyState === XMLHttpRequest.DONE && XHR.status === 200) {
+          chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+            var opts = {format: "jpeg", quality: 80};
+            chrome.tabs.captureVisibleTab(null, {format: "jpeg", quality: 80}, function(dataURL) {
+              console.log(dataURL);
+            });
+            //chrome.tabs.remove(tabs[0].id);
+          });
+          window.close();
+        }
+    };
   XHR.send(JSON.stringify(obj));
-
+  chrome.tabs.captureVisibleTab(null, {format: "jpeg", quality: 80}, function(dataURL) {
+              console.log(dataURL);
+            });
 });
+
+
 
 // $("#but").click(function() {
 //   e.preventDefault();
