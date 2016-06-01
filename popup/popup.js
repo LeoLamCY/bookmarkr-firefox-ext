@@ -36,24 +36,26 @@ document.querySelector('button').addEventListener('click', function(e) {
     "tags": tags
   }
 
-  XHR.open('POST', 'http://localhost:3000/api/bookmarks/');
+  XHR.open('POST', 'http://bookmarku.herokuapp.com/api/bookmarks/');
   XHR.setRequestHeader('Content-Type', 'application/json');
   XHR.onreadystatechange = function () {
         if(XHR.readyState === XMLHttpRequest.DONE && XHR.status === 200) {
           chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-            var opts = {format: "jpeg", quality: 80};
-            chrome.tabs.captureVisibleTab(null, {format: "jpeg", quality: 80}, function(dataURL) {
-              console.log(dataURL);
-            });
-            //chrome.tabs.remove(tabs[0].id);
+            // var opts = {format: "jpeg", quality: 80};
+            // chrome.tabs.captureVisibleTab(null, {format: "jpeg", quality: 80}, function(dataURL) {
+            //   console.log(dataURL);
+            // });
+
+            chrome.tabs.remove(tabs[0].id);
+            window.close();
           });
-          window.close();
+          
         }
     };
   XHR.send(JSON.stringify(obj));
-  chrome.tabs.captureVisibleTab(null, {format: "jpeg", quality: 80}, function(dataURL) {
-              console.log(dataURL);
-            });
+  // chrome.tabs.captureVisibleTab(null, {format: "jpeg", quality: 80}, function(dataURL) {
+  //             console.log(dataURL);
+  //           });
 });
 
 
