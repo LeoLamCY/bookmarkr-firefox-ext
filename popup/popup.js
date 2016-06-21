@@ -30,13 +30,14 @@ document.querySelector('button').addEventListener('click', function(e) {
   title = document.querySelector("input[name='title']").value;
   url = document.querySelector("input[name='url']").value;
   tags = document.querySelector("input[name='tags']").value;
+
   var obj = {
     "title": title,
     "url": url,
     "tags": tags
   }
 
-  XHR.open('POST', 'http://bookmarku.herokuapp.com/api/bookmarks/');
+  XHR.open('POST', 'http://130.211.140.213:8010//api/bookmarks/');
   XHR.setRequestHeader('Content-Type', 'application/json');
   XHR.onreadystatechange = function () {
         if(XHR.readyState === XMLHttpRequest.DONE && XHR.status === 200) {

@@ -1,25 +1,22 @@
 .wrapper {
   width: 400px;
-  height: 200px;
-  padding: 0px 10px 10px 0;
+  height: 100%;
+  padding: 10px;
   position:relative;
 }
 
-h2 {
+h3 {
     text-align: center;
 }
 
-form input {
+.input {
     display: block;
     width:100%;
-    margin: 10px 0;
+    margin: 0 0 10px 0;
     font-size: 1rem;
 }
 
-button {
-    display:block;
-    margin: 20px auto 10px auto;
-    width: 60%;
-    height: 30px;
-
+#send-button {
+  display: block;
+  margin: 0 auto;
 }

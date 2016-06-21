@@ -2,18 +2,32 @@
 <html>
   <head>
     <meta charset="utf-8">
+    <link rel="stylesheet" href="semantic.min.css"/>
     <link rel="stylesheet" href="popup.css"/>
   </head>
   <body>
     <div class="wrapper">
-      <h2>Save to Bookmarkr</h2>
-      <form onsubmit="submit()">
-          <input type="text" name="title" placeholder="title"></input>
-          <input type="text" name="url" placeholder="url"></input>
-          <input type="text" name="tags" placeholder="tags" autofocus></input>
-          <button type="submit">Submit</button>
+      <h3>Save to Bookmarkr</h3>
+      <form class="ui form" onsubmit="submit()">
+        <div class="ui input small left icon">
+          <input type="text" name="title" placeholder="title">
+          <i class="icon bookmark"></i>
+        </div>
+        <div class="ui input small left icon">
+          <input type="text" name="url" placeholder="url">
+          <i class="icon linkify"></i>
+        </div>
+        <div class="ui input small field left icon">
+          <input type="text" name="tags" placeholder="tags" autofocus>
+          <i class="icon tags"></i>
+        </div>
+        <button class="ui teal medium button" id="send-button" type="submit">
+          <i class="icon send"></i>
+          Submit
+        </button>
       </form>
     </div>
     <script src="popup.js"></script>
+    <script src="semantic.min.js"></script>
   </body>
 </html>
