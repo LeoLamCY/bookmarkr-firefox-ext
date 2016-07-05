@@ -9,6 +9,10 @@ var loginInfo = {
   "userId": "",
   "authToken": ""
 }
+var signupForm = document.querySelector("#signup-form");
+var signupButton = document.querySelector("#signup-button");
+var signupPasswordError = document.querySelector(".password-error");
+var signupEmailError = document.querySelector(".email-error");
 // chrome.cookies.set({
 //   "url": "http://130.211.140.213",
 //   "name": "bookmarkr",
@@ -21,6 +25,26 @@ var loginInfo = {
 var hideLoginForm = function() {
   document.querySelector("#login-reg-form").style.display = "none";
   document.querySelector(".wrapper").style.display = "inherit"; 
+}
+
+var setCookies = function(data) {
+  chrome.cookies.set({
+    "url": "http://localhost:3000",
+    "name": "bookmarkr-userId",
+    "value": data.userId,
+    "expirationDate": 9999999999,
+  });
+  chrome.cookies.set({
+    "url": "http://localhost:3000",
+    "name": "bookmarkr-authToken",
+    "value": data.authToken,
+    "expirationDate": 9999999999,
+  });
+}
+
+var onLoginRegSuccess = function(data) {
+  hideLoginForm();
+  setCookies(data);
 }
 
 // chrome.cookies.get({
@@ -54,10 +78,7 @@ chrome.cookies.getAll({
 }, (cookie) => {
   if(cookie != "") {
     cookie.map(function(element) {
-      if(element.name == "bookmarkr-userId")
-        loginInfo.userId = element.value;
-      if(element.name == "bookmarkr-authToken")
-        loginInfo.authToken = element.value;
+        loginInfo[element.name] = element.value;
     });
     hideLoginForm();
   }
@@ -70,6 +91,7 @@ chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
     url = tabs[0].url;
 });
 
+//add bookmark
 document.querySelector('#submit-button').addEventListener('click', function(e) {
   e.preventDefault();
   title = document.querySelector("input[name='title']").value;
@@ -79,10 +101,12 @@ document.querySelector('#submit-button').addEventListener('click', function(e) {
   var body = {
     title,
     url,
-    tags
+    tags,
+    "userId": loginInfo.userId
   }
 
-  XHR.open('POST', 'http://130.211.140.213:8010/api/bookmarks/');
+  // XHR.open('POST', 'http://130.211.140.213:8010/api/bookmarks/');
+  XHR.open('POST', 'http://localhost:3000/api/bookmarks/');
   XHR.setRequestHeader('Content-Type', 'application/json');
   XHR.onreadystatechange = function () {
         if(XHR.readyState === XMLHttpRequest.DONE && XHR.status === 200) {
@@ -104,6 +128,7 @@ document.querySelector('#submit-button').addEventListener('click', function(e) {
   //           });
 });
 
+//login
 document.querySelector('#login-button').addEventListener('click', function(e) {
   e.preventDefault();
 
@@ -120,19 +145,7 @@ document.querySelector('#login-button').addEventListener('click', function(e) {
   XHR.onreadystatechange = function () {
         if(XHR.readyState === XMLHttpRequest.DONE && XHR.status === 200) {
           var response = JSON.parse(XHR.responseText);
-          hideLoginForm();
-          chrome.cookies.set({
-            "url": "http://localhost:3000",
-            "name": "bookmarkr-userId",
-            "value": response.data.userId,
-            "expirationDate": 9999999999,
-          });
-          chrome.cookies.set({
-            "url": "http://localhost:3000",
-            "name": "bookmarkr-authToken",
-            "value": response.data.authToken,
-            "expirationDate": 9999999999,
-          });
+          onLoginRegSuccess(response.data);
         }
         else {
           loginForm.classList.toggle("error");
@@ -141,4 +154,43 @@ document.querySelector('#login-button').addEventListener('click', function(e) {
     };
   XHR.send(JSON.stringify(body));
   loginButton.classList.add("loading");
+});
+
+//signup
+document.querySelector('#signup-button').addEventListener('click', function(e) {
+  e.preventDefault();
+
+  email = document.querySelector("input[name='reg-email']").value;
+  password = document.querySelector("input[name='reg-password']").value;
+  confirmPassword = document.querySelector("input[name='reg-confirm-password']").value;
+
+  if(password != confirmPassword || password.length === 0) {
+    signupEmailError.style.display = 'none';
+    signupPasswordError.style.display = 'inherit';
+    signupForm.classList.toggle("error");
+    return;
+  }
+
+  var body = {
+    email, 
+    password
+  }
+
+  XHR.open('POST', 'http://localhost:3000/api/users/');
+  XHR.setRequestHeader('Content-Type', 'application/json');
+  XHR.onreadystatechange = function () {
+        if(XHR.readyState === XMLHttpRequest.DONE && XHR.status === 201) {
+          var response = JSON.parse(XHR.responseText);
+          onLoginRegSuccess(response.data);
+        }
+        else {
+          signupPasswordError.style.display = 'none';
+          signupEmailError.style.display = 'inherit';
+          signupForm.classList.toggle("error");
+
+          signupButton.classList.remove("loading");
+        }
+    };
+  XHR.send(JSON.stringify(body));
+  signupButton.classList.add("loading");
 });

@@ -34,7 +34,7 @@
           Or
         </div>
         <div class="column">
-          <div class="ui form">
+          <div class="ui form" id="signup-form">
             <div class="field">
               <h4 class="ui header">Sign up</h4>
               <div class="ui left icon input">
@@ -55,6 +55,14 @@
               </div>
             </div>
             <div class="ui fluid large blue submit button" id="signup-button">Sign up</div>
+            <div class="ui error message password-error">
+              <div class="header">Error</div>
+              <p>The passwords entered do not match, please try again.</p>
+            </div>
+            <div class="ui error message email-error">
+              <div class="header">Error</div>
+              <p>The email entered already exists! Please login.</p>
+            </div>
           </div>
         </div>
       </div> 
