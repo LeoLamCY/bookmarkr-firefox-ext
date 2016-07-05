@@ -6,6 +6,59 @@
     <link rel="stylesheet" href="popup.css"/>
   </head>
   <body>
+    <div id="login-reg-form"> 
+      <div class="ui two column aligned very relaxed grid">
+        <div class="column">
+          <div class="ui form" id="login-form">
+            <div class="field">
+              <h4 class="ui header">Login</h4>
+              <div class="ui left icon input">
+                <input placeholder="Email" name="email" type="text">
+                <i class="user icon"></i>
+              </div>
+            </div>
+            <div class="field">
+              <div class="ui left icon input">
+                <input placeholder="Password" name="password" type="password">
+                <i class="lock icon"></i>
+              </div>
+            </div>
+            <div class="ui fluid large teal submit button" id="login-button">Login</div>
+            <div class="ui error message">
+              <div class="header">Login failed!</div>
+              <p>The email/password combination given do not match, please try again.</p>
+            </div>
+          </div>
+        </div>
+        <div class="ui vertical divider">
+          Or
+        </div>
+        <div class="column">
+          <div class="ui form">
+            <div class="field">
+              <h4 class="ui header">Sign up</h4>
+              <div class="ui left icon input">
+                <input placeholder="Email" name="reg-email" type="text">
+                <i class="user icon"></i>
+              </div>
+            </div>
+            <div class="field">
+              <div class="ui left icon input">
+                <input placeholder="password" name="reg-password" type="password">
+                <i class="lock icon"></i>
+              </div>
+            </div>
+            <div class="field">
+              <div class="ui left icon input">
+                <input placeholder="confirm password" name="reg-confirm-password" type="password">
+                <i class="repeat icon"></i>
+              </div>
+            </div>
+            <div class="ui fluid large blue submit button" id="signup-button">Sign up</div>
+          </div>
+        </div>
+      </div> 
+    </div>
     <div class="wrapper">
       <h3>Save to Bookmarkr</h3>
       <form class="ui form" onsubmit="submit()">
@@ -21,7 +74,7 @@
           <input type="text" name="tags" placeholder="tags" autofocus>
           <i class="icon tags"></i>
         </div>
-        <button class="ui teal medium button" id="send-button" type="submit">
+        <button class="ui teal medium button" id="submit-button" type="submit">
           <i class="icon send"></i>
           Submit
         </button>

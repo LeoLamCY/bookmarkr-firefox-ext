@@ -1,43 +1,88 @@
-
-// chrome.tabs.executeScript(null, {
-//   file: "/content_scripts/script.js"
-// });
-
-// document.querySelector("form").addEventListener("submit", click);
-//
-
-// function hello() {
-//   chrome.tabs.executeScript({
-//     file: 'alert.js'
-//   });
-// }
-
 var backgroundPage = chrome.extension.getBackgroundPage();
 var title = "";
 var url = "";
 var tags = "";
 var XHR = new XMLHttpRequest();
+var loginForm = document.querySelector("#login-form");
+var loginButton = document.querySelector("#login-button");
+var loginInfo = {
+  "userId": "",
+  "authToken": ""
+}
+// chrome.cookies.set({
+//   "url": "http://130.211.140.213",
+//   "name": "bookmarkr",
+//   "value": "aasdasd",
+//   "expirationDate": 9999999999,
+// }, (cookie) => {
+//   alert(cookie.value);
+// });
+
+var hideLoginForm = function() {
+  document.querySelector("#login-reg-form").style.display = "none";
+  document.querySelector(".wrapper").style.display = "inherit"; 
+}
+
+// chrome.cookies.get({
+//   "url": "http://localhost:3000",
+//   "name": "bookmarkr-authTken",
+// }, (cookie) => {
+//   if(cookie) {
+//     authToken = cookie.value;
+//     chrome.cookies.get({
+//       "url": "http://localhost:3000",
+//       "name": "bookmarkr-userId",
+//     }, (cookie) => {
+//       if(cookie) {
+//         userId = cookie.value;
+//       }
+//     });
+//     hideLoginForm();
+//   }
+// });
+// 
+// chrome.cookies.remove({
+//   "url": "http://localhost:3000",
+//   "name": "bookmarkr-authToken"
+// });
+// chrome.cookies.remove({
+//   "url": "http://localhost:3000",
+//   "name": "bookmarkr-userId"
+// });
+chrome.cookies.getAll({
+  "url": "http://localhost:3000"
+}, (cookie) => {
+  if(cookie != "") {
+    cookie.map(function(element) {
+      if(element.name == "bookmarkr-userId")
+        loginInfo.userId = element.value;
+      if(element.name == "bookmarkr-authToken")
+        loginInfo.authToken = element.value;
+    });
+    hideLoginForm();
+  }
+});
 
 chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
     document.querySelector("input[name='title']").value = tabs[0].title;
-    title = tabs[0].title;
     document.querySelector("input[name='url']").value = tabs[0].url;
+    title = tabs[0].title;
     url = tabs[0].url;
-  });
+});
 
-document.querySelector('button').addEventListener('click', function(e) {
+document.querySelector('#submit-button').addEventListener('click', function(e) {
   e.preventDefault();
   title = document.querySelector("input[name='title']").value;
   url = document.querySelector("input[name='url']").value;
   tags = document.querySelector("input[name='tags']").value;
 
-  var obj = {
-    "title": title,
-    "url": url,
-    "tags": tags
+  var body = {
+    title,
+    url,
+    tags
   }
 
-  XHR.open('POST', 'http://130.211.140.213:8010//api/bookmarks/');
+  XHR.open('POST', 'http://130.211.140.213:8010/api/bookmarks/');
   XHR.setRequestHeader('Content-Type', 'application/json');
   XHR.onreadystatechange = function () {
         if(XHR.readyState === XMLHttpRequest.DONE && XHR.status === 200) {
@@ -53,67 +98,47 @@ document.querySelector('button').addEventListener('click', function(e) {
           
         }
     };
-  XHR.send(JSON.stringify(obj));
+  XHR.send(JSON.stringify(body));
   // chrome.tabs.captureVisibleTab(null, {format: "jpeg", quality: 80}, function(dataURL) {
   //             console.log(dataURL);
   //           });
 });
 
+document.querySelector('#login-button').addEventListener('click', function(e) {
+  e.preventDefault();
 
+  email = document.querySelector("input[name='email']").value;
+  password = document.querySelector("input[name='password']").value;
 
-// $("#but").click(function() {
-//   e.preventDefault();
-//   chrome.tabs.query({'active': true,'currentWindow':true},function(tab){
-//     chrome.tabs.sendMessage(tab[0].id,"stuff", function(response){
-//       //assuming that info was html markup then you could do
-//       document.body.innerhtml = "test";
-//       //I personally wouldn't do it like this but you get the idea
-//     });
-//   });
-// });
+  var body = {
+    email, 
+    password
+  }
 
-// chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-//   chrome.tabs.sendMessage(tabs[0].id, {tab: tabs[0]});
-// });
-
-// function click(e) {
-//   e.preventDefault();
-//   chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-//     chrome.tabs.sendMessage(tabs[0].id, {tab: tabs[0]});
-//   });
-//   // var title = document.getElementById("title");
-//   //   var url = document.getElementById("url");
-//   //   title.value = request.tab.title;
-//   //   url.value = request.tab.url;
-//   $('#title').val("test");
-// }
-/*
-Listen for clicks in the popup.
-
-If the click is not on one of the beasts, return early.
-
-Otherwise, the text content of the node is the name of the beast we want.
-
-Inject the "beastify.js" content script in the active tab.
-
-Then get the active tab and send "beastify.js" a message
-containing the URL to the chosen beast's image.
-*/
-  // document.addEventListener("click", function(e) {
-  //   if (e.target.classList.contains("inp")) {
-  //     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-  //       chrome.tabs.sendMessage(tabs[0].id, {beastURL: "http://www.google.com"});
-  //   })}
-
-  //   var chosenBeast = e.target.textContent;
-  //   var chosenBeastURL = beastNameToURL(chosenBeast);
-
-  //   chrome.tabs.executeScript(null, {
-  //     file: "/content_scripts/beastify.js"
-  //   });
-
-  //   chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-  //     chrome.tabs.sendMessage(tabs[0].id, {beastURL: chosenBeastURL});
-  //   });
-
-  // });
+  XHR.open('POST', 'http://localhost:3000/api/login/');
+  XHR.setRequestHeader('Content-Type', 'application/json');
+  XHR.onreadystatechange = function () {
+        if(XHR.readyState === XMLHttpRequest.DONE && XHR.status === 200) {
+          var response = JSON.parse(XHR.responseText);
+          hideLoginForm();
+          chrome.cookies.set({
+            "url": "http://localhost:3000",
+            "name": "bookmarkr-userId",
+            "value": response.data.userId,
+            "expirationDate": 9999999999,
+          });
+          chrome.cookies.set({
+            "url": "http://localhost:3000",
+            "name": "bookmarkr-authToken",
+            "value": response.data.authToken,
+            "expirationDate": 9999999999,
+          });
+        }
+        else {
+          loginForm.classList.toggle("error");
+          loginButton.classList.remove("loading");
+        }
+    };
+  XHR.send(JSON.stringify(body));
+  loginButton.classList.add("loading");
+});
