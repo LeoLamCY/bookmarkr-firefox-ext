@@ -6,8 +6,8 @@ var XHR = new XMLHttpRequest();
 var loginForm = document.querySelector("#login-form");
 var loginButton = document.querySelector("#login-button");
 var loginInfo = {
-  "userId": "",
-  "authToken": ""
+  "bookmarkr-userId": "",
+  "bookmarkr-authToken": ""
 }
 var signupForm = document.querySelector("#signup-form");
 var signupButton = document.querySelector("#signup-button");
@@ -97,12 +97,11 @@ document.querySelector('#submit-button').addEventListener('click', function(e) {
   title = document.querySelector("input[name='title']").value;
   url = document.querySelector("input[name='url']").value;
   tags = document.querySelector("input[name='tags']").value;
-
   var body = {
     title,
     url,
     tags,
-    "userId": loginInfo.userId
+    "userId": loginInfo["bookmarkr-userId"]
   }
 
   // XHR.open('POST', 'http://130.211.140.213:8010/api/bookmarks/');
