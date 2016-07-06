@@ -23,8 +23,8 @@ var signupEmailError = document.querySelector(".email-error");
 // });
 
 var hideLoginForm = function() {
-  document.querySelector("#login-reg-form").style.display = "none";
   document.querySelector(".wrapper").style.display = "inherit"; 
+  document.querySelector("#login-reg-form").style.display = "none";
 }
 
 var setCookies = function(data) {
@@ -47,24 +47,53 @@ var onLoginRegSuccess = function(data) {
   setCookies(data);
 }
 
-// chrome.cookies.get({
-//   "url": "http://localhost:3000",
-//   "name": "bookmarkr-authTken",
-// }, (cookie) => {
-//   if(cookie) {
-//     authToken = cookie.value;
-//     chrome.cookies.get({
-//       "url": "http://localhost:3000",
-//       "name": "bookmarkr-userId",
-//     }, (cookie) => {
-//       if(cookie) {
-//         userId = cookie.value;
-//       }
-//     });
-//     hideLoginForm();
-//   }
-// });
-// 
+var login = function(email, password) {
+  var body = {
+    email, 
+    password
+  }
+
+  XHR.open('POST', 'http://localhost:3000/api/login/');
+  XHR.setRequestHeader('Content-Type', 'application/json');
+  XHR.onreadystatechange = function () {
+        if(XHR.readyState === XMLHttpRequest.DONE && XHR.status === 200) {
+          var response = JSON.parse(XHR.responseText);
+          onLoginRegSuccess(response.data);
+        }
+        else {
+          loginForm.classList.toggle("error");
+          loginButton.classList.remove("loading");
+        }
+    };
+  XHR.send(JSON.stringify(body));
+  loginButton.classList.add("loading");
+}
+
+var signup = function(email, password, confirmPassword) {
+  var body = {
+    email, 
+    password
+  }
+
+  XHR.open('POST', 'http://localhost:3000/api/users/');
+  XHR.setRequestHeader('Content-Type', 'application/json');
+  XHR.onreadystatechange = function () {
+        if(XHR.readyState === XMLHttpRequest.DONE && XHR.status === 201) {
+          var response = JSON.parse(XHR.responseText);
+          login(email, password);
+          onLoginRegSuccess(response.data);
+        }
+        else {
+          signupPasswordError.style.display = 'none';
+          signupEmailError.style.display = 'inherit';
+          signupForm.classList.toggle("error");
+
+          signupButton.classList.remove("loading");
+        }
+    };
+  XHR.send(JSON.stringify(body));
+  signupButton.classList.add("loading");
+}
 // chrome.cookies.remove({
 //   "url": "http://localhost:3000",
 //   "name": "bookmarkr-authToken"
@@ -110,21 +139,12 @@ document.querySelector('#submit-button').addEventListener('click', function(e) {
   XHR.onreadystatechange = function () {
         if(XHR.readyState === XMLHttpRequest.DONE && XHR.status === 200) {
           chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-            // var opts = {format: "jpeg", quality: 80};
-            // chrome.tabs.captureVisibleTab(null, {format: "jpeg", quality: 80}, function(dataURL) {
-            //   console.log(dataURL);
-            // });
-
             chrome.tabs.remove(tabs[0].id);
             window.close();
           });
-          
         }
     };
   XHR.send(JSON.stringify(body));
-  // chrome.tabs.captureVisibleTab(null, {format: "jpeg", quality: 80}, function(dataURL) {
-  //             console.log(dataURL);
-  //           });
 });
 
 //login
@@ -134,25 +154,7 @@ document.querySelector('#login-button').addEventListener('click', function(e) {
   email = document.querySelector("input[name='email']").value;
   password = document.querySelector("input[name='password']").value;
 
-  var body = {
-    email, 
-    password
-  }
-
-  XHR.open('POST', 'http://localhost:3000/api/login/');
-  XHR.setRequestHeader('Content-Type', 'application/json');
-  XHR.onreadystatechange = function () {
-        if(XHR.readyState === XMLHttpRequest.DONE && XHR.status === 200) {
-          var response = JSON.parse(XHR.responseText);
-          onLoginRegSuccess(response.data);
-        }
-        else {
-          loginForm.classList.toggle("error");
-          loginButton.classList.remove("loading");
-        }
-    };
-  XHR.send(JSON.stringify(body));
-  loginButton.classList.add("loading");
+  login(email, password);
 });
 
 //signup
@@ -169,27 +171,5 @@ document.querySelector('#signup-button').addEventListener('click', function(e) {
     signupForm.classList.toggle("error");
     return;
   }
-
-  var body = {
-    email, 
-    password
-  }
-
-  XHR.open('POST', 'http://localhost:3000/api/users/');
-  XHR.setRequestHeader('Content-Type', 'application/json');
-  XHR.onreadystatechange = function () {
-        if(XHR.readyState === XMLHttpRequest.DONE && XHR.status === 201) {
-          var response = JSON.parse(XHR.responseText);
-          onLoginRegSuccess(response.data);
-        }
-        else {
-          signupPasswordError.style.display = 'none';
-          signupEmailError.style.display = 'inherit';
-          signupForm.classList.toggle("error");
-
-          signupButton.classList.remove("loading");
-        }
-    };
-  XHR.send(JSON.stringify(body));
-  signupButton.classList.add("loading");
+  signup(email, password, confirmPassword);
 });
